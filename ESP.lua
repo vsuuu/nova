@@ -739,6 +739,14 @@ local UpdatingFunctions; LPH_NO_VIRTUALIZE(function()
 
 		HeadDot = function(Entry, CircleObject, CircleOutlineObject)
 			local Settings = Environment.Properties.HeadDot
+			local DeveloperSettings = Environment.DeveloperSettings
+
+			if DeveloperSettings.Throttle then
+				Entry._Frame = (Entry._Frame or 0) + 1
+				if Entry._Frame % mathclamp(DeveloperSettings.ThrottleStep, 2, 4) ~= 0 then
+					return
+				end
+			end
 
 			local Character = Entry.IsAPlayer and __index(Entry.Object, "Character") or __index(Entry.Object, "Parent")
 			local Head = Character and FindFirstChild(Character, "Head")
