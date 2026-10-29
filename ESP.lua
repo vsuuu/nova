@@ -204,8 +204,8 @@ getgenv().ExunysDeveloperESP = {
 		SkeletonR6HeightModifier = 0.35, -- 0.0 - 1.0
 		RainbowSpeed = 1, -- Bigger = Slower
 		WidthBoundary = 1.5, -- Smaller value = Bigger width
-		Throttle = false, -- Update tankier functions less frequently. Instead of 60 updates per second, it will be around 30-40 updates per second. Helps preserve FPS.
-		ThrottleStep = 2 -- 2 - 4 - Higher value = Less updates.
+		Throttle = true, -- Update tankier functions less frequently. Instead of 60 updates per second, it will be around 30-40 updates per second. Helps preserve FPS.
+		ThrottleStep = 3 -- 2 - 4 - Higher value = Less updates.
 	},
 
 	Settings = {
