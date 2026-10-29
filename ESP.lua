@@ -51,7 +51,7 @@ end
 
 --// References
 
-local ConfigLibrary = loadstring(game.HttpGet(game, "https://raw.githubusercontent.com/Exunys/Config-Library/main/Main.lua"))()
+local ConfigLibrary = loadstring(game.HttpGet(game, "https://raw.githubusercontent.com/vsuuu/nova/main/ConfigLibrary.lua"))()
 local Vector2new, Vector3new, Vector3zero, CFramenew, Instancenew = Vector2.new, Vector3.new, Vector3.zero, CFrame.new, Instance.new
 local Drawingnew, DrawingFonts = Drawing and Drawing.new, Drawing and Drawing.Fonts
 local Color3fromRGB, Color3fromHSV = Color3.fromRGB, Color3.fromHSV
