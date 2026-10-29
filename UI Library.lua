@@ -1120,7 +1120,7 @@ end
 
 local themes = {
 	Default = {
-		["Accent"] = Color3.fromRGB(113, 93, 133),
+		["Accent"] = Color3.fromRGB(78, 205, 196),
 		["Window Background"] = Color3.fromRGB(30, 30, 30),
 		["Window Border"] = Color3.fromRGB(45, 45, 45),
 		["Tab Background"] = Color3.fromRGB(20, 20, 20),
@@ -1136,7 +1136,7 @@ local themes = {
 	},
 
 	Midnight = {
-		["Accent"] = Color3.fromRGB(100, 59, 154),
+		["Accent"] = Color3.fromRGB(78, 205, 196),
 		["Window Background"] = Color3.fromRGB(30, 30, 36),
 		["Window Border"] = Color3.fromRGB(45, 45, 49),
 		["Tab Background"] = Color3.fromRGB(20, 20, 24),
@@ -1152,7 +1152,7 @@ local themes = {
 	},
 
 	AirHub = {
-		["Accent"] = Color3.fromRGB(150, 100, 150),
+		["Accent"] = Color3.fromRGB(78, 205, 196),
 		["Window Background"] = Color3.fromRGB(35, 30, 35),
 		["Window Border"] = Color3.fromRGB(50, 45, 50),
 		["Tab Background"] = Color3.fromRGB(25, 20, 25),
