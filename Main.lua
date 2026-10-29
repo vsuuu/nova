@@ -53,7 +53,7 @@ Crosshair.Enabled = false
 Aimbot_Settings.Enabled = false
 
 local Fonts = {"UI", "System", "Plex", "Monospace"}
-local TracerPositions = {"Bottom", "Center", "Mouse"}
+local TracerPositions = {"Bottom", "Center", "Mouse", "Top"}
 local HealthBarPositions = {"Top", "Bottom", "Left", "Right"}
 local BoxTypes = {"Square", "Quad", "Corner"}
 
