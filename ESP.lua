@@ -1018,6 +1018,14 @@ local UpdatingFunctions; LPH_NO_VIRTUALIZE(function()
 
 		HealthBar = function(Entry, MainObject, OutlineObject, Humanoid)
 			local Settings = Environment.Properties.HealthBar
+			local DeveloperSettings = Environment.DeveloperSettings
+
+			if DeveloperSettings.Throttle then
+				Entry._Frame = (Entry._Frame or 0) + 1
+				if Entry._Frame % mathclamp(DeveloperSettings.ThrottleStep, 2, 4) ~= 0 then
+					return
+				end
+			end
 
 			local Position, Size, OnScreen = CoreFunctions.CalculateParameters(Entry)
 
