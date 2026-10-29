@@ -693,11 +693,13 @@ local UpdatingFunctions; LPH_NO_VIRTUALIZE(function()
 					setrenderproperty(TracerObject, "From", Vector2new(CameraViewportSize.X / 2, CameraViewportSize.Y))
 				elseif Settings.Position == 2 then
 					setrenderproperty(TracerObject, "From", CameraViewportSize / 2)
-				elseif Settings.Position == 3 then
-					setrenderproperty(TracerObject, "From", GetMouseLocation())
-				else
-					Settings.Position = 1
-				end
+							elseif Settings.Position == 3 then
+				setrenderproperty(TracerObject, "From", GetMouseLocation())
+			elseif Settings.Position == 4 then
+				setrenderproperty(TracerObject, "From", Vector2new(CameraViewportSize.X / 2, 0))
+			else
+				Settings.Position = 1
+			end   
 
 				if Entry.PositionChanged then
 					setrenderproperty(TracerObject, "To", Vector2new(Position.X + (Size.X / 2), Position.Y + Size.Y))
