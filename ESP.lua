@@ -2470,7 +2470,7 @@ local LoadESP; LPH_NO_VIRTUALIZE(function()
 		
 		for _, Value in next, GetPlayers() do
 			if Value ~= LocalPlayer then
-				UtilityFunctions:WrapObject(Value, nil, nil, 250)
+				UtilityFunctions:WrapObject(Value, nil, nil, 1000)
 			end
 		end
 
