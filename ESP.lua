@@ -580,8 +580,16 @@ end)()
 
 local UpdatingFunctions; LPH_NO_VIRTUALIZE(function()
 	UpdatingFunctions = {
-		ESP = function(Entry, TopTextObject, BottomTextObject)
+				ESP = function(Entry, TopTextObject, BottomTextObject)
 			local Settings = Environment.Properties.ESP
+			local DeveloperSettings = Environment.DeveloperSettings
+
+			if DeveloperSettings.Throttle then
+				Entry._Frame = (Entry._Frame or 0) + 1
+				if Entry._Frame % mathclamp(DeveloperSettings.ThrottleStep, 2, 4) ~= 0 then
+					return
+				end
+			end
 
 			local Position, Size, OnScreen, Top, Bottom = CoreFunctions.CalculateParameters(Entry)
 
