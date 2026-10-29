@@ -29,7 +29,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Exunys/Roblox-Functio
 
 local GUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/vsuuu/nova/main/UI%20Library.lua"))()   
 local ESP = loadstring(game:HttpGet("https://raw.githubusercontent.com/vsuuu/nova/main/ESP.lua"))()
-local Aimbot = loadstring(game:HttpGet("https://raw.githubusercontent.com/Exunys/Aimbot-V3/main/src/Aimbot.lua"))()
+local Aimbot = loadstring(game:HttpGet("https://raw.githubusercontent.com/vsuuu/nova/main/Aimbot.lua"))()
 
 --// Variables
 
