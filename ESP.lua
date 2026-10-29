@@ -201,8 +201,8 @@ getgenv().ExunysDeveloperESP = {
 		SkeletonR6HeightModifier = 0.35,
 		RainbowSpeed = 1,
 		WidthBoundary = 1.5,
-		Throttle = true,
-		ThrottleStep = 3
+		Throttle = false,
+		ThrottleStep = 2
 	},
 
 	Settings = {
@@ -243,7 +243,7 @@ getgenv().ExunysDeveloperESP = {
 			Enabled = true,
 			RainbowColor = false,
 			RainbowOutlineColor = false,
-			Position = 1,
+			Position = 1, -- 1 = Bottom; 2 = Center; 3 = Mouse; 4 = Top
 
 			Transparency = 1,
 			Thickness = 1,
@@ -560,14 +560,6 @@ local UpdatingFunctions; LPH_NO_VIRTUALIZE(function()
 	UpdatingFunctions = {
 		ESP = function(Entry, TopTextObject, BottomTextObject)
 			local Settings = Environment.Properties.ESP
-			local DeveloperSettings = Environment.DeveloperSettings
-
-			if DeveloperSettings.Throttle then
-				Entry._Frame = (Entry._Frame or 0) + 1
-				if Entry._Frame % mathclamp(DeveloperSettings.ThrottleStep, 2, 4) ~= 0 then
-					return
-				end
-			end
 
 			local Position, Size, OnScreen, Top, Bottom = CoreFunctions.CalculateParameters(Entry)
 
@@ -660,14 +652,6 @@ local UpdatingFunctions; LPH_NO_VIRTUALIZE(function()
 
 		Tracer = function(Entry, TracerObject, TracerOutlineObject)
 			local Settings = Environment.Properties.Tracer
-			local DeveloperSettings = Environment.DeveloperSettings
-
-			if DeveloperSettings.Throttle then
-				Entry._Frame = (Entry._Frame or 0) + 1
-				if Entry._Frame % mathclamp(DeveloperSettings.ThrottleStep, 2, 4) ~= 0 then
-					return
-				end
-			end
 
 			local Position, Size, OnScreen = CoreFunctions.CalculateParameters(Entry)
 
@@ -717,14 +701,6 @@ local UpdatingFunctions; LPH_NO_VIRTUALIZE(function()
 
 		HeadDot = function(Entry, CircleObject, CircleOutlineObject)
 			local Settings = Environment.Properties.HeadDot
-			local DeveloperSettings = Environment.DeveloperSettings
-
-			if DeveloperSettings.Throttle then
-				Entry._Frame = (Entry._Frame or 0) + 1
-				if Entry._Frame % mathclamp(DeveloperSettings.ThrottleStep, 2, 4) ~= 0 then
-					return
-				end
-			end
 
 			local Character = Entry.IsAPlayer and __index(Entry.Object, "Character") or __index(Entry.Object, "Parent")
 			local Head = Character and FindFirstChild(Character, "Head")
@@ -850,13 +826,6 @@ local UpdatingFunctions; LPH_NO_VIRTUALIZE(function()
 			local LineSize = mathclamp(mathabs((Top - Bottom).Y) - 3, 2, mathmax(Settings.LineSize, 20))
 
 			if getrenderproperty(BoxParts.TopLeft_Bottom, "Visible") or getrenderproperty(SquareBoxObject, "Visible") or getrenderproperty(Quads.Top, "Visible") then
-				if DeveloperSettings.Throttle then
-					Entry._Frame = (Entry._Frame or 0) + 1
-					if Entry._Frame % mathclamp(DeveloperSettings.ThrottleStep, 2, 4) ~= 0 then
-						return
-					end
-				end
-
 				if Fill and Type ~= 2 then
 					setrenderproperty(FillBox, "Transparency", Settings.FillTransparency)
 					setrenderproperty(FillBox, "Thickness", 0)
@@ -886,6 +855,14 @@ local UpdatingFunctions; LPH_NO_VIRTUALIZE(function()
 					setrenderproperty(SquareBoxObject, "Position", Position)
 					setrenderproperty(SquareBoxObject, "Size", Size)
 				elseif Type == 2 then
+					if DeveloperSettings.Throttle then
+						Entry._Frame = (Entry._Frame or 0) + 1
+
+						if Entry._Frame % mathclamp(DeveloperSettings.ThrottleStep, 2, 4) ~= 0 then
+							return
+						end
+					end
+
 					for Index, Value in next, Settings do
 						for _, RenderObject in next, Quads do
 							if ValidProperties[Index] then
@@ -984,14 +961,6 @@ local UpdatingFunctions; LPH_NO_VIRTUALIZE(function()
 
 		HealthBar = function(Entry, MainObject, OutlineObject, Humanoid)
 			local Settings = Environment.Properties.HealthBar
-			local DeveloperSettings = Environment.DeveloperSettings
-
-			if DeveloperSettings.Throttle then
-				Entry._Frame = (Entry._Frame or 0) + 1
-				if Entry._Frame % mathclamp(DeveloperSettings.ThrottleStep, 2, 4) ~= 0 then
-					return
-				end
-			end
 
 			local Position, Size, OnScreen = CoreFunctions.CalculateParameters(Entry)
 
@@ -1036,4 +1005,238 @@ local UpdatingFunctions; LPH_NO_VIRTUALIZE(function()
 					setrenderproperty(MainObject, "From", Vector2new(Position.X, Position.Y + Size.Y + Offset))
 					setrenderproperty(MainObject, "To", Vector2new(Position.X + (Health / MaxHealth) * Size.X, Position.Y + Size.Y + Offset))
 
-					if Settings.Outline   
+					if Settings.Outline then
+						setrenderproperty(OutlineObject, "From", Vector2new(Position.X - 1, Position.Y + Size.Y + Offset))
+						setrenderproperty(OutlineObject, "To", Vector2new(Position.X + Size.X + 1, Position.Y + Size.Y + Offset))
+					end
+				elseif Settings.Position == 3 then
+					setrenderproperty(MainObject, "From", Vector2new(Position.X - Offset, Position.Y + Size.Y))
+					setrenderproperty(MainObject, "To", Vector2new(Position.X - Offset, getrenderproperty(MainObject, "From").Y - (Health / MaxHealth) * Size.Y))
+
+					if Settings.Outline then
+						setrenderproperty(OutlineObject, "From", Vector2new(Position.X - Offset, Position.Y + Size.Y + 1))
+						setrenderproperty(OutlineObject, "To", Vector2new(Position.X - Offset, (getrenderproperty(OutlineObject, "From").Y - 1 * Size.Y) - 2))
+					end
+				elseif Settings.Position == 4 then
+					setrenderproperty(MainObject, "From", Vector2new(Position.X + Size.X + Offset, Position.Y + Size.Y))
+					setrenderproperty(MainObject, "To", Vector2new(Position.X + Size.X + Offset, getrenderproperty(MainObject, "From").Y - (Health / MaxHealth) * Size.Y))
+
+					if Settings.Outline then
+						setrenderproperty(OutlineObject, "From", Vector2new(Position.X + Size.X + Offset, Position.Y + Size.Y + 1))
+						setrenderproperty(OutlineObject, "To", Vector2new(Position.X + Size.X + Offset, (getrenderproperty(OutlineObject, "From").Y - 1 * Size.Y) - 2))
+					end
+				else
+					Settings.Position = 3
+				end
+			end
+		end,
+
+		Chams = function(Entry, Part, Cham)
+			local Settings = Environment.Properties.Chams
+
+			if not (Part and Cham and Entry) then
+				return
+			end
+
+			local ChamsEnabled, ESPEnabled = Settings.Enabled, Environment.Settings.Enabled
+			local IsReady = Entry.Checks.Ready
+
+			local ConvertVector = CoreFunctions.ConvertVector
+
+			local _CFrame, PartSize = select(2, pcall(function()
+				return __index(Part, "CFrame"), __index(Part, "Size") / 2
+			end))
+
+			if not (ChamsEnabled and ESPEnabled and IsReady and _CFrame and PartSize and select(2, WorldToViewportPoint(_CFrame.Position))) then
+				for Index = 1, 6 do
+					_set(Cham["Quad"..Index], "Visible", false)
+				end
+
+				return
+			end
+
+			local Quads = {
+				Quad1Object = Cham.Quad1,
+				Quad2Object = Cham.Quad2,
+				Quad3Object = Cham.Quad3,
+				Quad4Object = Cham.Quad4,
+				Quad5Object = Cham.Quad5,
+				Quad6Object = Cham.Quad6
+			}
+
+			for Index, Value in next, Settings do
+				if Index == "Enabled" then
+					Index, Value = "Visible", ChamsEnabled and ESPEnabled and IsReady
+				elseif Index == "Color" then
+					Value = CoreFunctions.GetColor(Entry.Object, Settings.RainbowColor and Rainbow or Settings.Color)
+				end
+
+				if not pcall(_get, Quads.Quad1Object, Index) then
+					continue
+				end
+
+				for _, RenderObject in next, Quads do
+					_set(RenderObject, Index, Value)
+				end
+			end
+
+			if not Entry.PositionChanged then
+				return
+			end
+
+			local Indexes, Positions = {1, 3, 4, 2}, CoreFunctions.Calculate3DQuad(_CFrame, PartSize)
+
+			for Index = 1, 6 do
+				local RenderObject = Quads["Quad"..Index.."Object"]
+
+				for _Index = 1, 4 do
+					_set(RenderObject, "Point"..stringchar(_Index + 64), ConvertVector(Positions[Index][Indexes[_Index]]))
+				end
+			end
+		end,
+
+		Skeleton = function(Entry)
+			local Settings = Environment.Properties.Skeleton
+			local DeveloperSettings = Environment.DeveloperSettings
+
+			local Character = Entry.IsAPlayer and __index(Entry.Object, "Character") or __index(Entry.Object, "Parent")
+			local Head = Character and FindFirstChild(Character, "Head")
+			local Primary = Character and (FindFirstChild(Character, "HumanoidRootPart") or __index(Character, "PrimaryPart"))
+
+			Primary = Primary or not Entry.IsAPlayer and Entry.Object
+
+			local Limbs, RigType = {}, Entry.RigType
+			local ConvertVector, HeightModifier = CoreFunctions.ConvertVector, Environment.DeveloperSettings.SkeletonR6HeightModifier
+
+			for Index, Value in next, Entry.Visuals.Skeleton do
+				Limbs[Index] = Value
+			end
+
+			local Visibility = function(Value)
+				for _, _Value in next, Limbs do
+					setrenderproperty(_Value, "Visible", Value)
+				end
+			end
+
+			if not Head or not Primary or RigType == "N/A" then
+				return Visibility(false)
+			end
+
+			if DeveloperSettings.Throttle then
+				Entry._Frame = (Entry._Frame or 0) + 1
+
+				if Entry._Frame % mathclamp(DeveloperSettings.ThrottleStep, 2, 4) ~= 0 then
+					return
+				end
+			end
+
+			if select(3, CoreFunctions.CalculateParameters(Entry)) then
+				for _, RenderObject in next, Limbs do
+					setrenderproperty(RenderObject, "Visible", true)
+
+					for _Index, _Value in next, Settings do
+						if ValidProperties[_Index] then
+							setrenderproperty(RenderObject, _Index, _Value)
+						end
+					end
+
+					setrenderproperty(RenderObject, "Color", CoreFunctions.GetColor(Entry.Object, Settings.RainbowColor and Rainbow or Settings.Color))
+				end
+
+				local Head_Position = ConvertVector(WorldToViewportPoint(__index(Head, "Position")))
+
+				if RigType == "R15" then
+					for _, Value in next, {"LeftHand", "RightHand", "LeftLowerArm", "RightLowerArm", "LeftUpperArm", "RightUpperArm", "LeftFoot", "LeftLowerLeg", "UpperTorso", "LeftUpperLeg", "RightFoot", "RightLowerLeg", "LowerTorso", "RightUpperLeg"} do
+						if not FindFirstChild(Character, Value) then
+							repeat
+								Visibility(false); wait(0)
+							until WaitForChild(Character, Value)
+						end
+					end
+
+					if not Entry.PositionChanged then
+						return
+					end
+
+					local Spine_Start_Position = ConvertVector(WorldToViewportPoint(__index(Character.UpperTorso, "Position")))
+					local Spine_End_Position = ConvertVector(WorldToViewportPoint(__index(Character.LowerTorso, "Position")))
+
+					local LeftArm_Start_Position = ConvertVector(WorldToViewportPoint(__index(Character.LeftUpperArm, "Position")))
+					local LeftArm_Middle_Position = ConvertVector(WorldToViewportPoint(__index(Character.LeftLowerArm, "Position")))
+					local LeftArm_End_Position = ConvertVector(WorldToViewportPoint(__index(Character.LeftHand, "Position")))
+
+					local RightArm_Start_Position = ConvertVector(WorldToViewportPoint(__index(Character.RightUpperArm, "Position")))
+					local RightArm_Middle_Position = ConvertVector(WorldToViewportPoint(__index(Character.RightLowerArm, "Position")))
+					local RightArm_End_Position = ConvertVector(WorldToViewportPoint(__index(Character.RightHand, "Position")))
+
+					local LeftLeg_Start_Position = ConvertVector(WorldToViewportPoint(__index(Character.LeftUpperLeg, "Position")))
+					local LeftLeg_Middle_Position = ConvertVector(WorldToViewportPoint(__index(Character.LeftLowerLeg, "Position")))
+					local LeftLeg_End_Position = ConvertVector(WorldToViewportPoint(__index(Character.LeftFoot, "Position")))
+
+					local RightLeg_Start_Position = ConvertVector(WorldToViewportPoint(__index(Character.RightUpperLeg, "Position")))
+					local RightLeg_Middle_Position = ConvertVector(WorldToViewportPoint(__index(Character.RightLowerLeg, "Position")))
+					local RightLeg_End_Position = ConvertVector(WorldToViewportPoint(__index(Character.RightFoot, "Position")))
+
+					setrenderproperty(Limbs.Spine_Start, "From", Head_Position)
+					setrenderproperty(Limbs.Spine_Start, "To", Spine_Start_Position)
+
+					setrenderproperty(Limbs.Spine_End, "From", Spine_Start_Position)
+					setrenderproperty(Limbs.Spine_End, "To", Spine_End_Position)
+
+					setrenderproperty(Limbs.LeftArm_Start, "From", Spine_Start_Position)
+					setrenderproperty(Limbs.LeftArm_Start, "To", LeftArm_Start_Position)
+
+					setrenderproperty(Limbs.LeftArm_Middle, "From", LeftArm_Start_Position)
+					setrenderproperty(Limbs.LeftArm_Middle, "To", LeftArm_Middle_Position)
+
+					setrenderproperty(Limbs.LeftArm_End, "From", LeftArm_Middle_Position)
+					setrenderproperty(Limbs.LeftArm_End, "To", LeftArm_End_Position)
+
+					setrenderproperty(Limbs.RightArm_Start, "From", Spine_Start_Position)
+					setrenderproperty(Limbs.RightArm_Start, "To", RightArm_Start_Position)
+
+					setrenderproperty(Limbs.RightArm_Middle, "From", RightArm_Start_Position)
+					setrenderproperty(Limbs.RightArm_Middle, "To", RightArm_Middle_Position)
+
+					setrenderproperty(Limbs.RightArm_End, "From", RightArm_Middle_Position)
+					setrenderproperty(Limbs.RightArm_End, "To", RightArm_End_Position)
+
+					setrenderproperty(Limbs.LeftLeg_Start, "From", Spine_End_Position)
+					setrenderproperty(Limbs.LeftLeg_Start, "To", LeftLeg_Start_Position)
+
+					setrenderproperty(Limbs.LeftLeg_Middle, "From", LeftLeg_Start_Position)
+					setrenderproperty(Limbs.LeftLeg_Middle, "To", LeftLeg_Middle_Position)
+
+					setrenderproperty(Limbs.LeftLeg_End, "From", LeftLeg_Middle_Position)
+					setrenderproperty(Limbs.LeftLeg_End, "To", LeftLeg_End_Position)
+
+					setrenderproperty(Limbs.RightLeg_Start, "From", Spine_End_Position)
+					setrenderproperty(Limbs.RightLeg_Start, "To", RightLeg_Start_Position)
+
+					setrenderproperty(Limbs.RightLeg_Middle, "From", RightLeg_Start_Position)
+					setrenderproperty(Limbs.RightLeg_Middle, "To", RightLeg_Middle_Position)
+
+					setrenderproperty(Limbs.RightLeg_End, "From", RightLeg_Middle_Position)
+					setrenderproperty(Limbs.RightLeg_End, "To", RightLeg_End_Position)
+				elseif RigType == "R6" then
+					for _, Value in next, {"Torso", "Left Arm", "Right Arm", "Left Leg", "Right Leg"} do
+						if not FindFirstChild(Character, Value) then
+							repeat
+								Visibility(false); wait(0)
+							until WaitForChild(Character, Value)
+						end
+					end
+
+					if not Entry.PositionChanged then
+						return
+					end
+
+					local Torso = __index(Character, "Torso")
+					local LeftArm = __index(Character, "Left Arm")
+					local RightArm = __index(Character, "Right Arm")
+					local LeftLeg = __index(Character, "Left Leg")
+					local RightLeg = __index(Character, "Right Leg")
+
+					local Torso_Height = __index(Torso, "Size").Y / 2 - (HeightModifier + 0.15)
+					local Spine_Start_Position = ConvertVector(WorldToViewportPoint((__index(Torso, "CFrame") * CFramenew(0, Torso_Height, 0)).Position))
+					local Spine_End_Position = ConvertVector(WorldToViewportPoint((__index(Torso, "CFrame") * CFramenew(0, -Torso   
